@@ -306,56 +306,6 @@ DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
 # DEPLOY SETTINGS #
 ###################
 
-# These settings are used by the default fabfile.py provided.
-# Check fabfile.py for defaults.
-
-# FABRIC = {
-#     "SSH_USER": "", # SSH username
-#     "SSH_PASS":  "", # SSH password (consider key-based authentication)
-#     "SSH_KEY_PATH":  "", # Local path to SSH key file, for key-based auth
-#     "HOSTS": [], # List of hosts to deploy to
-#     "VIRTUALENV_HOME":  "", # Absolute remote path for virtualenvs
-#     "PROJECT_NAME": "tastypie_presentation", # Unique identifier for project
-#     "REQUIREMENTS_PATH": "", # Path to pip requirements, relative to project
-#     "GUNICORN_PORT": 8000, # Port gunicorn will listen on
-#     "LOCALE": "en_US.UTF-8", # Should end with ".UTF-8"
-#     "LIVE_HOSTNAME": "www.example.com", # Host for public site.
-#     "REPO_URL": "git@github.com:rmutter/tastypie-presentation.git", # Git or Mercurial remote repo URL for the project
-#     "DB_PASS": "t@", # Live database password
-#     "ADMIN_PASS": "", # Live admin user password
-# }
-
-
-##################
-# LOCAL SETTINGS #
-##################
-
-# Allow any settings to be defined in local_settings.py which should be
-# ignored in your version control system allowing for settings to be
-# defined per machine.
-try:
-    from local_settings import *
-except ImportError:
-    pass
-
-
-####################
-# DYNAMIC SETTINGS #
-####################
-
-# set_dynamic_settings() will rewrite globals based on what has been
-# defined so far, in order to provide some better defaults where
-# applicable. We also allow this settings module to be imported
-# without Mezzanine installed, as the case may be when using the
-# fabfile, where setting the dynamic settings below isn't strictly
-# required.
-try:
-    from mezzanine.utils.conf import set_dynamic_settings
-except ImportError:
-    pass
-else:
-    set_dynamic_settings(globals())
-
 FABRIC = {
     "vagrant": {
         "SSH_USER": "vagrant", # SSH username
@@ -397,14 +347,14 @@ FABRIC = {
         "DEPLOY_DB_CLUSTER_SSH_KEY_PATH": "",
 
         # Yeti sandbox
-        "APPLICATION_HOSTS": ['127.0.0.1'], # List of hosts to deploy to
-        "DATABASE_HOSTS":['127.0.0.1'],
-        "LIVE_HOSTNAME": "", # Host for public site.
+        "APPLICATION_HOSTS": ['yetibuilt.com'], # List of hosts to deploy to
+        "DATABASE_HOSTS":['yetibuilt.com'],
+        "LIVE_HOSTNAME": "tastypie.yetibuilt.com", # Host for public site.
         "DB_PASS": "t@", # Live database password
         "ADMIN_PASS": "admin", # Live admin user password
 
         # shared application settings
-        "SITENAME": "Default",
+        "SITENAME": "Tastypie Presentation",
         "VIRTUALENV_HOME":  "/root/envs", # Absolute remote path for virtualenvs
         "PROJECT_NAME": "tastypie_presentation", # Unique identifier for project
         "REQUIREMENTS_PATH": "requirements/requirements.txt", # Path to pip requirements, relative to project
@@ -414,3 +364,34 @@ FABRIC = {
         "LINUX_DISTRO": "squeeze",
     }
 }
+
+
+##################
+# LOCAL SETTINGS #
+##################
+
+# Allow any settings to be defined in local_settings.py which should be
+# ignored in your version control system allowing for settings to be
+# defined per machine.
+try:
+    from local_settings import *
+except ImportError:
+    pass
+
+
+####################
+# DYNAMIC SETTINGS #
+####################
+
+# set_dynamic_settings() will rewrite globals based on what has been
+# defined so far, in order to provide some better defaults where
+# applicable. We also allow this settings module to be imported
+# without Mezzanine installed, as the case may be when using the
+# fabfile, where setting the dynamic settings below isn't strictly
+# required.
+try:
+    from mezzanine.utils.conf import set_dynamic_settings
+except ImportError:
+    pass
+else:
+    set_dynamic_settings(globals())
