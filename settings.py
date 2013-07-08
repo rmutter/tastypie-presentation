@@ -358,7 +358,7 @@ FABRIC = {
         "VIRTUALENV_HOME":  "/root/envs", # Absolute remote path for virtualenvs
         "PROJECT_NAME": "tastypie_presentation", # Unique identifier for project
         "REQUIREMENTS_PATH": "requirements/requirements.txt", # Path to pip requirements, relative to project
-        "GUNICORN_PORT": 8001, # Port gunicorn will listen on
+        "GUNICORN_PORT": 8021, # Port gunicorn will listen on
         "LOCALE": "en_US.UTF-8", # Should end with ".UTF-8"
         "REPO_URL": "git@github.com:rmutter/tastypie-presentation.git", # Git or Mercurial remote repo URL for the project
         "LINUX_DISTRO": "squeeze",
