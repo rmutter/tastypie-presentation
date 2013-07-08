@@ -42,18 +42,18 @@
 					<h1>REST APIs and Tastypie</h1>
 					<h3>An Introduction</h3>
 					<p>
-						<small>Authored by <a href="http://github.com/rmutter">Rudy Mutter</a> from <a href="http://yetihq.com">Yeti</a></small>
+						<small>By <a href="http://github.com/rmutter">Rudy Mutter</a> from <a href="http://yetihq.com">Yeti</a></small>
 					</p>
 				</section>
 
                 <section>
                     <h2>Game Plan</h2>
                     <ul>
-                        <li>APIs</li>
-                        <li>Basic Tastypie Resource</li>
-                        <li>Out of the Box Options</li>
+                        <li>Vocabulary</li>
+                        <li>The Basics</li>
+                        <li>Customization</li>
                         <li>Under the Hood</li>
-                        <li>Advanced Customization</li>
+                        <li>Advanced Usage</li>
                         <li>Tips & Tricks</li>
                     </ul>
                 </section>
@@ -61,35 +61,126 @@
 				<section>
                     <section>
                         <h2>What's an API?</h2>
-                    </section>
-                    <section>
-                        <h2>What's REST?</h2>
-                        <h4>(Representational State Transfer)</h4>
+                        <h4>Application Programming Interface</h4>
                         <p>
-                            HTTP URLs w/ GET, POST, PUT, DELETE
+                            A protocol for specifying how software should interact with each other.
                         </p>
                     </section>
                     <section>
-                        <h2>Basic Example</h2>
+                        <h2>What's REST?</h2>
+                        <h4>Representational State Transfer</h4>
+                        <p>
+                            Web API protocol for HTTP
+                            <br><br>
+                            URIs w/ HTTP GET, POST, PUT, DELETE represent resources and objects
+                        </p>
+                    </section>
+                    <section>
+                        <h2>CRUD</h2>
+                        <h4>Create Read Update Delete</h4>
+                        <p>
+                            POST -> Create <br>
+                            GET -> Read <br>
+                            PUT -> Update <br>
+                            DELETE -> Delete <br>
+                            <br><br>
+                            Easiest explanation (but there's much more to REST)
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Example URIs and REST Calls</h2>
+                        <h4>Uniform Resource Identifiers</h4>
 					<pre><code data-trim contenteditable>
-function linkify( selector ) {
-  if( supports3DTransforms ) {
+GET http://tastypie.yetibuilt.com/blog/
 
-    var nodes = document.querySelectorAll( selector );
-
-    for( var i = 0, len = nodes.length; i &lt; len; i++ ) {
-      var node = nodes[i];
-
-      if( !node.className ) ) {
-        node.className += ' roll';
-      }
-    };
-  }
+POST http://tastypie.yetibuilt.com/blog/
+{
+    'title': 'My new blog post',
+    'author': 'Rudy',
+    'post': 'This is a new blog post...'
 }
+
+PUT http://tastypie.yetibuilt.com/blog/1/
+{
+    'title': 'Changed blog post title',
+    'author': 'Rudy',
+    'post': 'This is a new blog post...'
+}
+
+DELETE http://tastypie.yetibuilt.com/blog/1/
 					</code></pre>
                     </section>
 				</section>
+                <section>
+                    <section>
+                        <h2>The Basics</h2>
+                        <ul>
+                            <li>Resources</li>
+                            <li>Fields</li>
+                            <li>Authentication/Authorization</li>
+                            <li>Hooking it Up</li>
+                            <li>Meta</li>
+                        </ul>
+                    </section>
+                </section>
 
+                <section>
+                    <section>
+                        <h2>Customization</h2>
+                        <ul>
+                            <li>Basic Options</li>
+                            <li>Allowed Methods</li>
+                            <li>Caching</li>
+                            <li>Filtering</li>
+                        </ul>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h2>Under the Hood</h2>
+                        <ul>
+                            <li>What is a Bundle?</li>
+                            <li>Hydrate & Dehydrate</li>
+                            <li>From URI -> Object</li>
+                            <li>Object -> Response</li>
+                        </ul>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h2>Advanced Usage</h2>
+                        <ul>
+                            <li>Non-Model Resource</li>
+                            <li>Custom URL</li>
+                            <li>Custom Filter Option</li>
+                            <li>Prefetch for Performance</li>
+                        </ul>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h2>Tips & Tricks</h2>
+                        <ul>
+                            <li>Postman</li>
+                            <li>JSON Viewer</li>
+                            <li>Tastypie Swagger</li>
+                            <li>iOS Restkit</li>
+                            <li>Sentry</li>
+                        </ul>
+                    </section>
+                </section>
+
+                <section>
+                    <h2>The End</h2>
+                    <p>
+                        Thanks for listening! <br><br>
+
+                        <small><a href="http://github.com/rmutter">Rudy Mutter</a> from <a href="http://yetihq.com">Yeti</a></small>
+                    </p>
+                </section>
 
 			</div>
 
