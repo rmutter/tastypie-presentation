@@ -1,5 +1,6 @@
 from django.conf import settings
 from tastypie.bundle import Bundle
+from tastypie.constants import ALL_WITH_RELATIONS
 from tastypie.fields import ToManyField, CharField
 from tastypie.resources import ModelResource, Resource
 from mezzanine.blog.models import BlogPost, BlogCategory
@@ -11,6 +12,9 @@ class BlogCategoryResource(ModelResource):
     class Meta:
         queryset = BlogCategory.objects.all()
         resource_name = "blog_category"
+        filtering = {
+            'title': ['exact', 'contains']
+        }
 
 
 class BlogPostResource(ModelResource):
@@ -19,6 +23,10 @@ class BlogPostResource(ModelResource):
     class Meta:
         queryset = BlogPost.objects.all()
         resource_name = "blog_post"
+        filtering = {
+            'categories': ALL_WITH_RELATIONS,
+            'title': ['exact', 'contains']
+        }
 
 
 class Version(object):

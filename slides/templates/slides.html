@@ -213,7 +213,7 @@ urlpatterns = patterns("",
                     <section>
                         <h2>Let's Try it Out</h2>
                         <p>
-                            <a href="/api/v1/blog_post?format=json" target="_blank">Boop</a>
+                            <a href="/api/v1/blog_post?format=json" target="_blank">Try It</a>
                         </p>
                     </section>
                     <section>
@@ -351,6 +351,8 @@ class BlogPostResource(ModelResource):
             'content': ['contains', 'icontains']
         }
                             </code></pre>
+                            <br>
+                            <a href="/api/v1/blog_post/?categories__title__contains=Dev&format=json" target="_blank">Try It</a>
                         </p>
                     </section>
                     <section>
@@ -470,7 +472,7 @@ class VersionResource(Resource):
     def obj_get_list(self, bundle, **kwargs):
         return self.get_object_list(bundle, **kwargs)
                             </code></pre>
-
+                            <a href="/api/v1/version/?format=json" target="_blank">Try It</a>
                         </p>
                     </section>
                     <section>
