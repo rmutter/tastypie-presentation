@@ -151,8 +151,6 @@ FILE_UPLOAD_PERMISSIONS = 0644
 
 VERSION = "1.0.0"
 
-TASTYPIE_SWAGGER_API_MODULE = 'tastypie_presentation.urls.v1_api'
-
 
 #############
 # DATABASES #
@@ -221,6 +219,7 @@ ROOT_URLCONF = "%s.urls" % PROJECT_DIRNAME
 # Don't forget to use absolute paths, not relative paths.
 TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "templates"),)
 
+TASTYPIE_SWAGGER_API_MODULE = "%s.v1_api" % ROOT_URLCONF
 
 ################
 # APPLICATIONS #
