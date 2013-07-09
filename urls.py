@@ -23,6 +23,7 @@ urlpatterns = patterns("",
     url("^$", direct_to_template, {"template": "slides.html"}, name="home"),
 
     url(r'^api/', include(v1_api.urls)),
+    url(r'api/doc/', include('tastypie_swagger.urls', namespace='tastypie_swagger')),
 
     ("^", include("mezzanine.urls")),
 

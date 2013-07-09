@@ -149,8 +149,9 @@ STATICFILES_FINDERS = (
 # a mode you'd pass directly to os.chmod.
 FILE_UPLOAD_PERMISSIONS = 0644
 
-
 VERSION = "1.0.0"
+
+TASTYPIE_SWAGGER_API_MODULE = 'tastypie_presentation.urls.v1_api'
 
 
 #############
@@ -247,6 +248,7 @@ INSTALLED_APPS = (
     #"mezzanine.mobile",
     "slides",
     "tastypie",
+    "tastypie_swagger",
 )
 
 # List of processors used by RequestContext to populate the context.

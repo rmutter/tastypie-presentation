@@ -8,6 +8,7 @@ distribute==0.6.34
 django-appconf==0.6
 django-compressor==1.3
 django-tastypie==0.9.15
+django-tastypie-swagger==0.1.1
 filebrowser-safe==0.2.27
 grappelli-safe==0.2.22
 gunicorn==17.5
