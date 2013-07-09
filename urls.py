@@ -4,7 +4,7 @@ from django.contrib import admin
 
 from mezzanine.core.views import direct_to_template
 from tastypie.api import Api
-from tastypie_presentation.slides.api.resources import BlogPostResource, BlogCategoryResource
+from slides.api.resources import BlogPostResource, BlogCategoryResource
 
 
 admin.autodiscover()
