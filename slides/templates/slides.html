@@ -65,7 +65,7 @@
                             <li>What's an API?</li>
                             <li>What's REST?</li>
                             <li>CRUD</li>
-                            <li>Example REST Calls</li>
+                            <li>Example Calls</li>
                         </ul>
                     </section>
                     <section>
@@ -97,25 +97,25 @@
                         </p>
                     </section>
                     <section>
-                        <h2>Example REST Calls</h2>
+                        <h2>Example Calls</h2>
 					<pre><code data-trim contenteditable>
-GET http://tastypie.yetibuilt.com/blog/
+GET http://tastypie.yetibuilt.com/blog_post/
 
-POST http://tastypie.yetibuilt.com/blog/
+POST http://tastypie.yetibuilt.com/blog_post/
 {
     'title': 'My new blog post',
     'author': 'Rudy',
     'post': 'This is a new blog post...'
 }
 
-PUT http://tastypie.yetibuilt.com/blog/1/
+PUT http://tastypie.yetibuilt.com/blog_post/1/
 {
     'title': 'Changed blog post title',
     'author': 'Rudy',
     'post': 'This is a new blog post...'
 }
 
-DELETE http://tastypie.yetibuilt.com/blog/1/
+DELETE http://tastypie.yetibuilt.com/blog_post/1/
 					</code></pre>
                     </section>
 				</section>
@@ -123,6 +123,7 @@ DELETE http://tastypie.yetibuilt.com/blog/1/
                     <section>
                         <h2>The Basics</h2>
                         <ul>
+                            <li>Install</li>
                             <li>Resources</li>
                             <li>Fields</li>
                             <li>Meta</li>
@@ -131,32 +132,94 @@ DELETE http://tastypie.yetibuilt.com/blog/1/
                         </ul>
                     </section>
                     <section>
+                        <h2>Install</h2>
+                        <p>
+                            <pre><code>
+pip install django-tastypie
+
+app/
+    api/
+        resources.py
+        authentication.py
+        authorization.py
+        fields.py
+
+INSTALLED_APPS = (
+    ...
+    "tastypie",
+)
+                            </code></pre>
+                        </p>
+                    </section>
+                    <section>
                         <h2>Resources</h2>
                         <p>
+                            <pre><code>
+from tastypie.resources import ModelResource
+from mezzanine.blog.models import BlogPost
 
+class BlogPostResource(ModelResource):
+    class Meta:
+        queryset = BlogPost.objects.all()
+        resource_name = "blog_post"
+                            </code></pre>
                         </p>
                     </section>
                     <section>
                         <h2>Fields</h2>
                         <p>
+                            ToManyField and ToOneField to easily grab related data
+                            <pre><code>
+class BlogCategoryResource(ModelResource):
+    class Meta:
+        queryset = BlogCategory.objects.all()
+        resource_name = "blog_category"
 
-                        </p>
-                    </section>
-                    <section>
-                        <h2>Meta</h2>
-                        <p>
+class BlogPostResource(ModelResource):
+    categories = ToManyField(BlogCategoryResource, 'categories', full=True)
 
+    class Meta:
+        queryset = BlogPost.objects.all()
+        resource_name = "blog_post"
+                            </code></pre>
                         </p>
                     </section>
                     <section>
                         <h2>Hooking it Up</h2>
                         <p>
+                            Register your API in urls.py, use version numbers to make changes to your API later.
+                            <pre><code class="python">
+v1_api = Api()
+v1_api.register(BlogPostResource())
+v1_api.register(BlogCategoryResource())
 
+urlpatterns = patterns("",
+    ...
+
+    url(r'^api/', include(v1_api.urls)),
+)
+                            </code></pre>
                         </p>
                     </section>
                     <section>
                         <h2>Let's Try it Out</h2>
                         <p>
+                            <a href="/api/v1/blog_post?format=json" target="_blank">Boop</a>
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Meta</h2>
+                        <p>
+                            Built in pagination for lists
+                            <pre><code class="json">
+meta: {
+    limit: 20,
+    next: null,
+    offset: 0,
+    previous: null,
+    total_count: 0
+}
+                            </code></pre>
 
                         </p>
                     </section>
@@ -167,40 +230,139 @@ DELETE http://tastypie.yetibuilt.com/blog/1/
                         <h2>Customization</h2>
                         <ul>
                             <li>Basic Options</li>
-                            <li>Allowed Methods</li>
-                            <li>Authentication/Authorization</li>
-                            <li>Caching</li>
+                            <li>Authentication</li>
+                            <li>Authorization</li>
+                            <li>Custom Authorization</li>
                             <li>Filtering</li>
+                            <li>Caching</li>
+                            <li>Format</li>
                         </ul>
                     </section>
                     <section>
                         <h2>Basic Options</h2>
                         <p>
-
+                            <pre><code class="python">
+class BlogPostResource(ModelResource):
+    class Meta:
+        ...
+        allowed_methods = ['get', 'post'] # Limit possible actions
+        fields = ['status'] # Explicitly which fields are included
+        excludes = ['rating'] # Return all fields except these
+        always_return_data = True # Return data when a POST is made
+        limit = 20 # Number of objects per 'page'
+        ordering = ['-publish_date'] # Default order by
+                            </code></pre>
+                            Plenty of more options to be used - <a href="http://django-tastypie.readthedocs.org/en/latest/resources.html#resource-options-aka-meta">ResourceOptions</a>
                         </p>
                     </section>
                     <section>
-                        <h2>Allowed Methods</h2>
+                        <h2>Authentication</h2>
                         <p>
-
+                            How does a user log in? <br>
+                            <ul>
+                                <li>Authentication - Default, doesn't require login</li>
+                                <li>BasicAuthentication - Basic HTTP Authentication, user:pass base64 encoded</li>
+                                <li>ApiKeyAuthentication - Tastypie has built in API Key table for use</li>
+                            </ul>
+                            <pre><code class="python">
+class BlogPostResource(ModelResource):
+    class Meta:
+        ...
+        authentication = Authentication()
+                            </code></pre>
                         </p>
                     </section>
                     <section>
-                        <h2>Authentication/Authorization</h2>
+                        <h2>Authorization</h2>
                         <p>
-
+                            What does a user have access to? <br>
+                            <ul>
+                                <li>Authorization - No permission checking</li>
+                                <li>ReadOnlyAuthorization - Default, only permits GET calls</li>
+                                <li>DjangoAuthorization - Uses built in Django permission system based on models</li>
+                            </ul>
+                            <pre><code class="python">
+class BlogPostResource(ModelResource):
+    class Meta:
+        ...
+        authorization = ReadOnlyAuthorization()
+                            </code></pre>
                         </p>
                     </section>
                     <section>
-                        <h2>Caching</h2>
+                        <h2>Custom Authorization</h2>
                         <p>
+                            Allow a user to only read, create, or update objects associated with them.
+                            <pre><code class="python">
+class UserObjectsOnlyAuthorization(Authorization):
+    def read_list(self, object_list, bundle):
+        return object_list.filter(user=bundle.request.user)
 
+    def read_detail(self, object_list, bundle):
+        return bundle.obj.user == bundle.request.user
+
+    def create_list(self, object_list, bundle):
+        return object_list
+
+    def create_detail(self, object_list, bundle):
+        return bundle.obj.user == bundle.request.user
+
+    def update_list(self, object_list, bundle):
+        allowed = []
+
+        # Since they may not all be saved, iterate over them.
+        for obj in object_list:
+            if obj.user == bundle.request.user:
+                allowed.append(obj)
+
+        return allowed
+
+    def update_detail(self, object_list, bundle):
+        return bundle.obj.user == bundle.request.user
+
+    def delete_list(self, object_list, bundle):
+        raise Unauthorized("Sorry, no deletes.")
+
+    def delete_detail(self, object_list, bundle):
+        raise Unauthorized("Sorry, no deletes.")
+                            </code></pre>
                         </p>
                     </section>
                     <section>
                         <h2>Filtering</h2>
                         <p>
-
+                            Can list related resources or individual fields
+                            <pre><code class="python">
+class BlogPostResource(ModelResource):
+    class Meta:
+        ...
+        filtering = {
+            'categories': ALL_WITH_RELATIONS,
+            'status': ['exact'],
+            'content': ['contains', 'icontains']
+        }
+                            </code></pre>
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Caching</h2>
+                        <p>
+                            Limited out of the box options - SimpleCache or NoCache
+                            <pre><code class="python">
+class BlogPostResource(ModelResource):
+    class Meta:
+        ...
+        cache = SimpleCache(60) # Cache this response for 60 seconds
+                            </code></pre>
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Format</h2>
+                        <p>
+                            Tastypie comes with multiple serializer options - json, xml, yaml, html, plist, jsonp <br>
+                            When in doubt, just support json.
+                            <br><br>
+                            http://tastypie.yetibuilt.com/blog_post/?format=json
                         </p>
                     </section>
                 </section>

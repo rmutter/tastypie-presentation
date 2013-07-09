@@ -3,13 +3,15 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
 from mezzanine.core.views import direct_to_template
+from tastypie.api import Api
+from tastypie_presentation.slides.api.resources import BlogPostResource, BlogCategoryResource
 
 
 admin.autodiscover()
 
-# Add the urlpatterns for any custom Django applications here.
-# You can also change the ``home`` view to add your own functionality
-# to the project's homepage.
+v1_api = Api()
+v1_api.register(BlogPostResource())
+v1_api.register(BlogCategoryResource())
 
 urlpatterns = patterns("",
 
@@ -18,6 +20,8 @@ urlpatterns = patterns("",
     ("^admin/", include(admin.site.urls)),
 
     url("^$", direct_to_template, {"template": "slides.html"}, name="home"),
+
+    url(r'^api/', include(v1_api.urls)),
 
     ("^", include("mezzanine.urls")),
 
