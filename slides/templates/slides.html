@@ -47,6 +47,15 @@
 				</section>
 
                 <section>
+                    <h2>Follow Along</h2>
+                    <p>
+                        http://tastypie.yetibuilt.com
+                        <br><br>
+                        <a href="https://github.com/rmutter/tastypie-presentation">Github</a>
+                    </p>
+                </section>
+
+                <section>
                     <h2>Game Plan</h2>
                     <ul>
                         <li>Vocabulary</li>
@@ -380,25 +389,41 @@ class BlogPostResource(ModelResource):
                     <section>
                         <h2>What is a Bundle?</h2>
                         <p>
-
+                            A bundle is made up of data and an object <br><br>
+                            Data - Information about the request being made <br>
+                            Object - The instance we're trying to create, read, update, delete
                         </p>
                     </section>
                     <section>
                         <h2>Hydrate & Dehydrate</h2>
                         <p>
-
+                            Hydrate - Serialized data, ex. from a POST, needs to be deserialized for a data model to use.
+                            <br><br>
+                            Dehydrate - A data model's values are prepared to be serialized, ex. for a JSON response
                         </p>
                     </section>
                     <section>
-                        <h2>From URI -> Object</h2>
+                        <h2>From URI -> Object(s)</h2>
                         <p>
-
+                            <ol>
+                                <li>A request comes through the pipes - /api/v1/blog_post/?format=json</li>
+                                <li>Validation is run on your settings, such as Authorization, Authentication, allowed_methods</li>
+                                <li>_detail or _list decided upon multiple or single resources</li>
+                                <li>get_, post_, put_, delete_ decided upon HTTP method</li>
+                                <li>an object is then appropriately associated with the bundle and hydrated</li>
+                            </ol>
                         </p>
                     </section>
                     <section>
-                        <h2>Object -> Response</h2>
+                        <h2>Object(s) -> Response</h2>
                         <p>
-
+                            <ol>
+                                <li>Filters are applied to the object(s)</li>
+                                <li>The bundle's object(s) are then possibly created, updated, or deleted</li>
+                                <li>Depending on the call, the list of objects are then sorted and paginated</li>
+                                <li>Object(s) are then dehydrated</li>
+                                <li>Respose created with serialized data</li>
+                            </ol>
                         </p>
                     </section>
                 </section>
@@ -416,25 +441,102 @@ class BlogPostResource(ModelResource):
                     <section>
                         <h2>Non-Model Resource</h2>
                         <p>
+                            <pre><code class="python">
+class Version(object):
+    def __init__(self, identifier=None):
+        self.identifier = identifier
+
+class VersionResource(Resource):
+    identifier = fields.CharField(attribute='identifier')
+
+    class Meta:
+        resource_name = 'version'
+        allowed_methods = ['get']
+        object_class = Version
+
+    def detail_uri_kwargs(self, bundle_or_obj):
+        kwargs = {}
+
+        if isinstance(bundle_or_obj, Bundle):
+            kwargs['pk'] = bundle_or_obj.obj.identifier
+        else:
+            kwargs['pk'] = bundle_or_obj['identifier']
+
+        return kwargs
+
+    def get_object_list(self, bundle, **kwargs):
+        return [Version(identifier=settings.VERSION)]
+
+    def obj_get_list(self, bundle, **kwargs):
+        return self.get_object_list(bundle, **kwargs)
+                            </code></pre>
 
                         </p>
                     </section>
                     <section>
                         <h2>Custom URL</h2>
                         <p>
+                            <pre><code class="python">
+def prepend_urls(self):
+    return [
+        url(r"^(?P&lt;resource_name&gt;%s)/social_share/(?P&lt;pk&gt;\w[\w/-]*)/$" % self._meta.resource_name, self.wrap_view('social_share'), name="api_social_share"),
+    ]
+
+def social_share(self, request, **kwargs):
+    self.method_check(request, allowed=['post'])
+    self.is_authenticated(request)
+
+    try:
+        report = self._meta.queryset._clone().get(pk=kwargs['pk'])
+    except self._meta.object_class.DoesNotExist:
+        return http.HttpNotFound()
+
+    deserialized = self.deserialize(request, request.raw_post_data, format=request.META.get('CONTENT_TYPE', 'application/json'))
+    bundle = self.build_bundle(obj=report, request=request, data=dict_strip_unicode_keys(deserialized))
+
+    post_to_social_media()
+
+    bundle = self.full_dehydrate(bundle)
+    return self.create_response(request, bundle, response_class=http.HttpAccepted)
+                            </code></pre>
 
                         </p>
                     </section>
                     <section>
                         <h2>Custom Filtering</h2>
                         <p>
+                            <pre><code class="python">
+def apply_filters(self, request, applicable_filters):
+    latitude = request.GET.get('latitude')
+    if not latitude:
+        raise BadRequest("Missing latitude parameter")
+
+    longitude = request.GET.get('longitude')
+    if not longitude:
+        raise BadRequest("Missing longitude parameter")
+
+    long_range = get_longitude_range(float(longitude), float(latitude), 30)
+    lat_range = get_latitude_range(float(latitude), 30)
+    applicable_filters['location__longitude__range'] = long_range
+    applicable_filters['location__latitude__range'] = lat_range
+
+    return super(Resource, self).apply_filters(request, applicable_filters)
+                            </code></pre>
 
                         </p>
                     </section>
                     <section>
                         <h2>Performance</h2>
                         <p>
-
+                            <pre><code class="python">
+class Meta:
+    queryset = BlogPost.objects.prefetch_related('user', 'comments').all()
+                            </code></pre>
+                            <br>
+                            <pre><code class="python">
+class Meta:
+    queryset = BlogPost.objects.annotate(comment_count=Count('comments')).order_by('-comment_count')
+                            </code></pre>
                         </p>
                     </section>
                 </section>
@@ -515,6 +617,15 @@ class BlogPostResource(ModelResource):
 				progress: true,
 				history: true,
 				center: true,
+
+                // The "normal" size of the presentation, aspect ratio will be preserved
+                // when the presentation is scaled to fit different resolutions. Can be
+                // specified using percentage units.
+                width: 1280,
+                height: 500,
+
+                // Factor of the display size that should remain empty around the content
+                margin: 0.1,
 
 				// Optional libraries used to extend on reveal.js
 				dependencies: [

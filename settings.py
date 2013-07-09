@@ -150,6 +150,9 @@ STATICFILES_FINDERS = (
 FILE_UPLOAD_PERMISSIONS = 0644
 
 
+VERSION = "1.0.0"
+
+
 #############
 # DATABASES #
 #############

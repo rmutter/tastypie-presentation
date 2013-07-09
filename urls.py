@@ -4,7 +4,7 @@ from django.contrib import admin
 
 from mezzanine.core.views import direct_to_template
 from tastypie.api import Api
-from slides.api.resources import BlogPostResource, BlogCategoryResource
+from slides.api.resources import BlogPostResource, BlogCategoryResource, VersionResource
 
 
 admin.autodiscover()
@@ -12,6 +12,7 @@ admin.autodiscover()
 v1_api = Api()
 v1_api.register(BlogPostResource())
 v1_api.register(BlogCategoryResource())
+v1_api.register(VersionResource())
 
 urlpatterns = patterns("",
 
